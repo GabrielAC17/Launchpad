@@ -9,14 +9,6 @@
 
 #include "lp.h"
 
-#define ENTRADA 1
-#define SAIDA	0
-#define INPUT 	1
-#define OUTPUT	0
-#define HIGH	1
-#define LOW	0
-
-
 
 bool GPIOExport(int pino)
 {

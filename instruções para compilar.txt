@@ -1,5 +1,5 @@
 Para compilar no linux use o seguinte comando:
 
-gcc -Wall main.c lp.c -o launchpad
+gcc -Wall main.c lp.c fila.c -o launchpad
 
 Isso vai linkar os 2 arquivos .c e isso permite uma organização maior.
