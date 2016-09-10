@@ -35,6 +35,11 @@
 //Define até quantos elementos de aúdio de uma coluna podem ser colocados na fila
 #define list_size 10
 
+//Define tempo de espera de leitura dos botões (ms)
+#define button_mdelay 200
+
+//Define tempo de espera de escrita dos leds (ms)
+#define led_mdelay 10
 
 //Funções do programa
 void init(),desliga();
@@ -174,10 +179,102 @@ void desliga(){
 
 void * ler_bot(void * threadid)
 {
+	while(1){
+		GPIOWrite(bot_lin1,HIGH);
+		GPIOWrite(bot_lin2,LOW);
+		GPIOWrite(bot_lin3,LOW);
+		GPIOWrite(bot_lin4,LOW);
 
+		mat_bot[1][1] = GPIORead(bot_col1);
+		mat_bot[1][2] = GPIORead(bot_col2);
+		mat_bot[1][3] = GPIORead(bot_col3);
+		mat_bot[1][4] = GPIORead(bot_col4);
+		
+		
+		GPIOWrite(bot_lin1,LOW);
+		GPIOWrite(bot_lin2,HIGH);
+		GPIOWrite(bot_lin3,LOW);
+		GPIOWrite(bot_lin4,LOW);
+		
+		mat_bot[2][1] = GPIORead(bot_col1);
+		mat_bot[2][2] = GPIORead(bot_col2);
+		mat_bot[2][3] = GPIORead(bot_col3);
+		mat_bot[2][4] = GPIORead(bot_col4);
+		
+		
+		GPIOWrite(bot_lin1,LOW);
+		GPIOWrite(bot_lin2,LOW);
+		GPIOWrite(bot_lin3,HIGH);
+		GPIOWrite(bot_lin4,LOW);
+		
+		mat_bot[3][1] = GPIORead(bot_col1);
+		mat_bot[3][2] = GPIORead(bot_col2);
+		mat_bot[3][3] = GPIORead(bot_col3);
+		mat_bot[3][4] = GPIORead(bot_col4);
+		
+		
+		GPIOWrite(bot_lin1,LOW);
+		GPIOWrite(bot_lin2,LOW);
+		GPIOWrite(bot_lin3,LOW);
+		GPIOWrite(bot_lin4,HIGH);
+		
+		mat_bot[4][1] = GPIORead(bot_col1);
+		mat_bot[4][2] = GPIORead(bot_col2);
+		mat_bot[4][3] = GPIORead(bot_col3);
+		mat_bot[4][4] = GPIORead(bot_col4);
+		
+		usleep(button_mdelay * 1000);
+	}
 }
 
 void * update_leds(void * threadid)
 {
-
+	while(1){
+		GPIOWrite(led_lin1,HIGH);
+		GPIOWrite(led_lin2,LOW);
+		GPIOWrite(led_lin3,LOW);
+		GPIOWrite(led_lin4,LOW);
+		
+		GPIOWrite(led_col1,mat_led[1][1]);
+		GPIOWrite(led_col2,mat_led[1][2]);
+		GPIOWrite(led_col3,mat_led[1][3]);
+		GPIOWrite(led_col4,mat_led[1][4]);
+		usleep(led_mdelay);
+		
+		
+		GPIOWrite(led_lin1,LOW);
+		GPIOWrite(led_lin2,HIGH);
+		GPIOWrite(led_lin3,LOW);
+		GPIOWrite(led_lin4,LOW);
+		
+		GPIOWrite(led_col1,mat_led[2][1]);
+		GPIOWrite(led_col2,mat_led[2][2]);
+		GPIOWrite(led_col3,mat_led[2][3]);
+		GPIOWrite(led_col4,mat_led[2][4]);
+		usleep(led_mdelay);
+		
+		
+		GPIOWrite(led_lin1,LOW);
+		GPIOWrite(led_lin2,LOW);
+		GPIOWrite(led_lin3,HIGH);
+		GPIOWrite(led_lin4,LOW);
+		
+		GPIOWrite(led_col1,mat_led[3][1]);
+		GPIOWrite(led_col2,mat_led[3][2]);
+		GPIOWrite(led_col3,mat_led[3][3]);
+		GPIOWrite(led_col4,mat_led[3][4]);
+		usleep(led_mdelay);
+		
+		
+		GPIOWrite(led_lin1,LOW);
+		GPIOWrite(led_lin2,LOW);
+		GPIOWrite(led_lin3,LOW);
+		GPIOWrite(led_lin4,HIGH);
+		
+		GPIOWrite(led_col1,mat_led[4][1]);
+		GPIOWrite(led_col2,mat_led[4][2]);
+		GPIOWrite(led_col3,mat_led[4][3]);
+		GPIOWrite(led_col4,mat_led[4][4]);
+		usleep(led_mdelay);
+	}
 }
