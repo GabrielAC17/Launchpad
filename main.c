@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <pthread.h>
+#include <unistd.h>
 
 //Funções relacionadas ao GPIO
 #include "lp.h"
@@ -44,7 +45,7 @@
 //Funções do programa
 void init(),desliga();
 //Funções que iniciam em uma nova thread:
-void * ler_bot(void * threadid), *update_leds(void * threadid);
+void * ler_bot(void * threadid), *update_leds(void * threadid),* coluna1(void * threadid),* coluna2(void * threadid),* coluna3(void * threadid),* coluna4(void * threadid);
 
 bool mat_bot[4][4],mat_led[4][4];
 int aux_bot;
@@ -56,16 +57,32 @@ Fila playlist[4];
 //Variáveis de thread!
 //Thread 1: ler botões
 //Thread 2: atualizar LED's
+//Threads 3 a 6: Filas(Colunas) de reprodução
 pthread_t thread;
 pthread_t thread2;
+pthread_t thread3;
+pthread_t thread4;
+pthread_t thread5;
+pthread_t thread6;
 
 int rc;
 int rc2;
+int rc3;
+int rc4;
+int rc5;
+int rc6;
 
 long t;
 long t2;
+long t3;
+long t4;
+long t5;
+long t6;
 //Fim das variáveis de thread
 
+char* cwd;
+char buff[1025];
+char dir[3000];
 
 int main (){
 	init();
@@ -87,9 +104,22 @@ int main (){
 }
 
 void init(){
+	//Inicia lista
 	for (i=0;i<4;i++){
 		iniciar(list_size ,&playlist[i]);
 	}
+	
+	//Pega diretório do executável e cria comando para o player.
+	cwd = getcwd( buff, 1025 );
+    if( cwd != NULL ) {
+        printf( "Diretorio de musicas: %s/audios/. Crie o diretorio se nao houver e cole as musicas (1.mp3 a 16.mp3)\n", cwd );
+    }
+    else {
+    	printf("Error while getting dir path.\n");
+    	exit(-1);
+    }
+    snprintf(dir, sizeof(dir),"mpg123 %s/audios/", cwd);
+    
 	
 	//zerar matrizes de booleanos
 	for (i=0;i<4;i++){
@@ -146,6 +176,30 @@ void init(){
 	rc2 = pthread_create(&thread2,NULL,update_leds,(void*)t2);
 	if (rc2){
 		printf("Init. Failed! Cannot start thread update_leds\n");
+		exit(-1);
+	}
+	
+	rc3 = pthread_create(&thread3,NULL,coluna1,(void*)t3);
+	if (rc3){
+		printf("Init. Failed! Cannot start thread coluna1\n");
+		exit(-1);
+	}
+	
+	rc4 = pthread_create(&thread4,NULL,coluna2,(void*)t4);
+	if (rc4){
+		printf("Init. Failed! Cannot start thread coluna2\n");
+		exit(-1);
+	}
+	
+	rc5 = pthread_create(&thread5,NULL,coluna3,(void*)t5);
+	if (rc5){
+		printf("Init. Failed! Cannot start thread coluna3\n");
+		exit(-1);
+	}
+	
+	rc6 = pthread_create(&thread6,NULL,coluna4,(void*)t6);
+	if (rc6){
+		printf("Init. Failed! Cannot start thread coluna4\n");
 		exit(-1);
 	}
 }
@@ -222,7 +276,6 @@ void * ler_bot(void * threadid)
 		mat_bot[4][2] = GPIORead(bot_col2);
 		mat_bot[4][3] = GPIORead(bot_col3);
 		mat_bot[4][4] = GPIORead(bot_col4);
-		
 		usleep(button_mdelay * 1000);
 	}
 }
@@ -276,5 +329,49 @@ void * update_leds(void * threadid)
 		GPIOWrite(led_col3,mat_led[4][3]);
 		GPIOWrite(led_col4,mat_led[4][4]);
 		usleep(led_mdelay);
+	}
+}
+
+void * coluna1(void * threadid){
+	int * fila;
+	unsigned int qtde;
+	while (1){
+		fila = listar(playlist[0],&qtde);
+		if (!vazia(playlist[0])){
+			//system("mpg123 ");
+		}
+	}
+}
+
+void * coluna2(void * threadid){
+	int * fila;
+	unsigned int qtde;
+	while (1){
+		fila = listar(playlist[1],&qtde);
+		if (!vazia(playlist[1])){
+			//system("mpg123 ");
+		}
+	}
+}
+
+void * coluna3(void * threadid){
+	int * fila;
+	unsigned int qtde;
+	while (1){
+		fila = listar(playlist[2],&qtde);
+		if (!vazia(playlist[2])){
+			//system("mpg123 ");
+		}
+	}
+}
+
+void * coluna4(void * threadid){
+	int * fila;
+	unsigned int qtde;
+	while (1){
+		fila = listar(playlist[3],&qtde);
+		if (!vazia(playlist[3])){
+			//system("mpg123 ");
+		}
 	}
 }
