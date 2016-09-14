@@ -43,13 +43,18 @@
 #define led_mdelay 10
 
 //Funções do programa
-void init(),desliga();
-//Funções que iniciam em uma nova thread:
-void * ler_bot(void * threadid), *update_leds(void * threadid),* coluna1(void * threadid),* coluna2(void * threadid),* coluna3(void * threadid),* coluna4(void * threadid);
+void init(),desliga(),check_LED(int num, int * lin, int * col);
 
+//Funções que iniciam em uma nova thread:
+void * ler_bot(void * threadid), *update_leds(void * threadid), * coluna1(void * threadid),* coluna2(void * threadid),* coluna3(void * threadid),* coluna4(void * threadid);
+
+//Variáveis globais
 bool mat_bot[4][4],mat_led[4][4];
 int aux_bot;
 int i,j;
+char* cwd;
+char buff[1025];
+char dir[1200];
 
 //Fila circular, uma para cada coluna em reprodução
 Fila playlist[4];
@@ -78,14 +83,14 @@ long t3;
 long t4;
 long t5;
 long t6;
+
+bool texit = false;
 //Fim das variáveis de thread
 
-char* cwd;
-char buff[1025];
-char dir[3000];
 
 int main (){
 	init();
+	printf("Init ok!\n");
 	while(1){
 		aux_bot=0;
 		for (i=0;i<4;i++){
@@ -97,9 +102,11 @@ int main (){
 				}
 			}
 		}
-		
+		if (getchar()=='a')
+			break;
 	}
 	desliga();
+	printf("Shutdown ok, smell you later!.\n");
 	return 0;
 }
 
@@ -111,14 +118,13 @@ void init(){
 	
 	//Pega diretório do executável e cria comando para o player.
 	cwd = getcwd( buff, 1025 );
-    if( cwd != NULL ) {
-        printf( "Diretorio de musicas: %s/audios/. Crie o diretorio se nao houver e cole as musicas (1.mp3 a 16.mp3)\n", cwd );
-    }
-    else {
-    	printf("Error while getting dir path.\n");
+	if( cwd == NULL ) {
+        printf("Error while getting dir path.\n");
     	exit(-1);
     }
-    snprintf(dir, sizeof(dir),"mpg123 %s/audios/", cwd);
+    snprintf(dir, sizeof(dir),"%s/audios/", cwd); 
+    printf( "Musics path: %s. create the folder audios if not created yet. (1.wav a 16.wav)\nPress a and enter to exit the program.\n", dir );
+
     
 	
 	//zerar matrizes de booleanos
@@ -205,6 +211,8 @@ void init(){
 }
 
 void desliga(){
+	texit = true;
+	
 	//botões
 	GPIOUnexport(bot_lin1);
 	GPIOUnexport(bot_lin2);
@@ -226,14 +234,11 @@ void desliga(){
 	GPIOUnexport(led_col2);
 	GPIOUnexport(led_col3);
 	GPIOUnexport(led_col4);
-	
-	
-	pthread_exit(NULL);
 }
 
 void * ler_bot(void * threadid)
 {
-	while(1){
+	while(!texit){
 		GPIOWrite(bot_lin1,HIGH);
 		GPIOWrite(bot_lin2,LOW);
 		GPIOWrite(bot_lin3,LOW);
@@ -278,11 +283,12 @@ void * ler_bot(void * threadid)
 		mat_bot[4][4] = GPIORead(bot_col4);
 		usleep(button_mdelay * 1000);
 	}
+	 pthread_exit(threadid);
 }
 
 void * update_leds(void * threadid)
 {
-	while(1){
+	while(!texit){
 		GPIOWrite(led_lin1,HIGH);
 		GPIOWrite(led_lin2,LOW);
 		GPIOWrite(led_lin3,LOW);
@@ -330,48 +336,234 @@ void * update_leds(void * threadid)
 		GPIOWrite(led_col4,mat_led[4][4]);
 		usleep(led_mdelay);
 	}
+	pthread_exit(threadid);
 }
 
 void * coluna1(void * threadid){
 	int * fila;
 	unsigned int qtde;
-	while (1){
-		fila = listar(playlist[0],&qtde);
+	char path[1225];
+	char command[1250];
+	int lin, col;
+	
+	while (!texit){
 		if (!vazia(playlist[0])){
-			//system("mpg123 ");
+			fila = listar(playlist[0],&qtde);
+			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+		
+			if( access( path, F_OK ) != -1 ) {
+				snprintf(command, sizeof(command),"mpg123 %s", path);
+				system(command);
+				check_LED(fila[0],&lin,&col);
+				mat_led[lin][col] = false;
+				pop(&playlist[0]);
+			} 
+			else {
+    			check_LED(fila[0],&lin,&col);
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			pop(&playlist[0]);
+			}
+			free(fila);
 		}
 	}
+	pthread_exit(threadid);
 }
+
 
 void * coluna2(void * threadid){
 	int * fila;
 	unsigned int qtde;
-	while (1){
-		fila = listar(playlist[1],&qtde);
+	char path[1225];
+	char command[1250];
+	int lin, col;
+	
+	while (!texit){
 		if (!vazia(playlist[1])){
-			//system("mpg123 ");
+			fila = listar(playlist[1],&qtde);
+			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+		
+			if( access( path, F_OK ) != -1 ) {
+				snprintf(command, sizeof(command),"mpg123 %s", path);
+				system(command);
+				check_LED(fila[0],&lin,&col);
+				mat_led[lin][col] = false;
+				pop(&playlist[1]);
+			} 
+			else {
+    			check_LED(fila[0],&lin,&col);
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			pop(&playlist[1]);
+			}
+			free(fila);
 		}
 	}
+	pthread_exit(threadid);
 }
 
 void * coluna3(void * threadid){
 	int * fila;
 	unsigned int qtde;
-	while (1){
-		fila = listar(playlist[2],&qtde);
+	char path[1225];
+	char command[1250];
+	int lin, col;
+	
+	while (!texit){
 		if (!vazia(playlist[2])){
-			//system("mpg123 ");
+			fila = listar(playlist[2],&qtde);
+			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+		
+			if( access( path, F_OK ) != -1 ) {
+				snprintf(command, sizeof(command),"mpg123 %s", path);
+				system(command);
+				check_LED(fila[0],&lin,&col);
+				mat_led[lin][col] = false;
+				pop(&playlist[2]);
+			} 
+			else {
+    			check_LED(fila[0],&lin,&col);
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			pop(&playlist[2]);
+			}
+			free(fila);
 		}
 	}
+	pthread_exit(threadid);
 }
 
 void * coluna4(void * threadid){
 	int * fila;
 	unsigned int qtde;
-	while (1){
-		fila = listar(playlist[3],&qtde);
+	char path[1225];
+	char command[1250];
+	int lin, col;
+	
+	while (!texit){
 		if (!vazia(playlist[3])){
-			//system("mpg123 ");
+			fila = listar(playlist[3],&qtde);
+			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+		
+			if( access( path, F_OK ) != -1 ) {
+				snprintf(command, sizeof(command),"mpg123 %s", path);
+				system(command);
+				check_LED(fila[0],&lin,&col);
+				mat_led[lin][col] = false;
+				pop(&playlist[3]);
+			} 
+			else {
+    			check_LED(fila[0],&lin,&col);
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			usleep(100*1000);
+    			mat_led[lin][col] = true;
+    			usleep(100*1000);
+    			mat_led[lin][col] = false;
+    			pop(&playlist[3]);
+			}
+			free(fila);
 		}
+	}
+	pthread_exit(threadid);
+}
+
+void check_LED(int num, int * lin, int * col){
+	switch (num){
+		case 1:
+			*lin = 0;
+			*col = 0;
+			break;
+		case 2:
+			*lin = 0;
+			*col = 1;
+			break;
+		case 3:
+			*lin = 0;
+			*col = 2;
+			break;
+		case 4:
+			*lin = 0;
+			*col = 3;
+			break;
+		case 5:
+			*lin = 1;
+			*col = 0;
+			break;
+		case 6:
+			*lin = 1;
+			*col = 1;
+			break;
+		case 7:
+			*lin = 1;
+			*col = 2;
+			break;
+		case 8:
+			*lin = 1;
+			*col = 3;
+			break;
+		case 9:
+			*lin = 2;
+			*col = 0;
+			break;
+		case 10:
+			*lin = 2;
+			*col = 1;
+			break;
+		case 11:
+			*lin = 2;
+			*col = 2;
+			break;
+		case 12:
+			*lin = 2;
+			*col = 3;
+			break;
+		case 13:
+			*lin = 3;
+			*col = 0;
+			break;
+		case 14:
+			*lin = 3;
+			*col = 1;
+			break;
+		case 15:
+			*lin = 3;
+			*col = 2;
+			break;
+		case 16:
+			*lin = 3;
+			*col = 3;
+			break;
+		default:
+			*lin = 0;
+			*col = 0;
 	}
 }
