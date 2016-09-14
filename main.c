@@ -104,6 +104,7 @@ int main (){
 		}
 		if (getchar()=='a')
 			break;
+		usleep(button_mdelay * 1000);
 	}
 	desliga();
 	printf("Shutdown ok, smell you later!.\n");
@@ -244,10 +245,10 @@ void * ler_bot(void * threadid)
 		GPIOWrite(bot_lin3,LOW);
 		GPIOWrite(bot_lin4,LOW);
 
-		mat_bot[1][1] = GPIORead(bot_col1);
-		mat_bot[1][2] = GPIORead(bot_col2);
-		mat_bot[1][3] = GPIORead(bot_col3);
-		mat_bot[1][4] = GPIORead(bot_col4);
+		mat_bot[0][0] = GPIORead(bot_col1);
+		mat_bot[0][1] = GPIORead(bot_col2);
+		mat_bot[0][2] = GPIORead(bot_col3);
+		mat_bot[0][3] = GPIORead(bot_col4);
 		
 		
 		GPIOWrite(bot_lin1,LOW);
@@ -255,10 +256,10 @@ void * ler_bot(void * threadid)
 		GPIOWrite(bot_lin3,LOW);
 		GPIOWrite(bot_lin4,LOW);
 		
-		mat_bot[2][1] = GPIORead(bot_col1);
-		mat_bot[2][2] = GPIORead(bot_col2);
-		mat_bot[2][3] = GPIORead(bot_col3);
-		mat_bot[2][4] = GPIORead(bot_col4);
+		mat_bot[1][0] = GPIORead(bot_col1);
+		mat_bot[1][1] = GPIORead(bot_col2);
+		mat_bot[1][2] = GPIORead(bot_col3);
+		mat_bot[1][3] = GPIORead(bot_col4);
 		
 		
 		GPIOWrite(bot_lin1,LOW);
@@ -266,10 +267,10 @@ void * ler_bot(void * threadid)
 		GPIOWrite(bot_lin3,HIGH);
 		GPIOWrite(bot_lin4,LOW);
 		
-		mat_bot[3][1] = GPIORead(bot_col1);
-		mat_bot[3][2] = GPIORead(bot_col2);
-		mat_bot[3][3] = GPIORead(bot_col3);
-		mat_bot[3][4] = GPIORead(bot_col4);
+		mat_bot[2][0] = GPIORead(bot_col1);
+		mat_bot[2][1] = GPIORead(bot_col2);
+		mat_bot[2][2] = GPIORead(bot_col3);
+		mat_bot[2][3] = GPIORead(bot_col4);
 		
 		
 		GPIOWrite(bot_lin1,LOW);
@@ -277,11 +278,10 @@ void * ler_bot(void * threadid)
 		GPIOWrite(bot_lin3,LOW);
 		GPIOWrite(bot_lin4,HIGH);
 		
-		mat_bot[4][1] = GPIORead(bot_col1);
-		mat_bot[4][2] = GPIORead(bot_col2);
-		mat_bot[4][3] = GPIORead(bot_col3);
-		mat_bot[4][4] = GPIORead(bot_col4);
-		usleep(button_mdelay * 1000);
+		mat_bot[3][0] = GPIORead(bot_col1);
+		mat_bot[3][1] = GPIORead(bot_col2);
+		mat_bot[3][2] = GPIORead(bot_col3);
+		mat_bot[3][3] = GPIORead(bot_col4);
 	}
 	 pthread_exit(threadid);
 }
@@ -294,10 +294,10 @@ void * update_leds(void * threadid)
 		GPIOWrite(led_lin3,LOW);
 		GPIOWrite(led_lin4,LOW);
 		
-		GPIOWrite(led_col1,mat_led[1][1]);
-		GPIOWrite(led_col2,mat_led[1][2]);
-		GPIOWrite(led_col3,mat_led[1][3]);
-		GPIOWrite(led_col4,mat_led[1][4]);
+		GPIOWrite(led_col1,mat_led[0][0]);
+		GPIOWrite(led_col2,mat_led[0][1]);
+		GPIOWrite(led_col3,mat_led[0][2]);
+		GPIOWrite(led_col4,mat_led[0][3]);
 		usleep(led_mdelay);
 		
 		
@@ -306,10 +306,10 @@ void * update_leds(void * threadid)
 		GPIOWrite(led_lin3,LOW);
 		GPIOWrite(led_lin4,LOW);
 		
-		GPIOWrite(led_col1,mat_led[2][1]);
-		GPIOWrite(led_col2,mat_led[2][2]);
-		GPIOWrite(led_col3,mat_led[2][3]);
-		GPIOWrite(led_col4,mat_led[2][4]);
+		GPIOWrite(led_col1,mat_led[1][0]);
+		GPIOWrite(led_col2,mat_led[1][1]);
+		GPIOWrite(led_col3,mat_led[1][2]);
+		GPIOWrite(led_col4,mat_led[1][3]);
 		usleep(led_mdelay);
 		
 		
@@ -318,10 +318,10 @@ void * update_leds(void * threadid)
 		GPIOWrite(led_lin3,HIGH);
 		GPIOWrite(led_lin4,LOW);
 		
-		GPIOWrite(led_col1,mat_led[3][1]);
-		GPIOWrite(led_col2,mat_led[3][2]);
-		GPIOWrite(led_col3,mat_led[3][3]);
-		GPIOWrite(led_col4,mat_led[3][4]);
+		GPIOWrite(led_col1,mat_led[2][0]);
+		GPIOWrite(led_col2,mat_led[2][1]);
+		GPIOWrite(led_col3,mat_led[2][2]);
+		GPIOWrite(led_col4,mat_led[2][3]);
 		usleep(led_mdelay);
 		
 		
@@ -330,10 +330,10 @@ void * update_leds(void * threadid)
 		GPIOWrite(led_lin3,LOW);
 		GPIOWrite(led_lin4,HIGH);
 		
-		GPIOWrite(led_col1,mat_led[4][1]);
-		GPIOWrite(led_col2,mat_led[4][2]);
-		GPIOWrite(led_col3,mat_led[4][3]);
-		GPIOWrite(led_col4,mat_led[4][4]);
+		GPIOWrite(led_col1,mat_led[3][0]);
+		GPIOWrite(led_col2,mat_led[3][1]);
+		GPIOWrite(led_col3,mat_led[3][2]);
+		GPIOWrite(led_col4,mat_led[3][3]);
 		usleep(led_mdelay);
 	}
 	pthread_exit(threadid);
@@ -349,7 +349,7 @@ void * coluna1(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[0])){
 			fila = listar(playlist[0],&qtde);
-			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
@@ -389,7 +389,7 @@ void * coluna2(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[1])){
 			fila = listar(playlist[1],&qtde);
-			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
@@ -428,7 +428,7 @@ void * coluna3(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[2])){
 			fila = listar(playlist[2],&qtde);
-			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
@@ -467,7 +467,7 @@ void * coluna4(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[3])){
 			fila = listar(playlist[3],&qtde);
-			snprintf(path, sizeof(path),"%s/%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
