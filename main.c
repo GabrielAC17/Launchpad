@@ -84,27 +84,34 @@ long t4;
 long t5;
 long t6;
 
+bool started = false;
+bool started2 = false;
+bool started3 = false;
+bool started4 = false;
+bool started5 = false;
+bool started6 = false;
+
 bool texit = false;
 //Fim das variáveis de thread
-
 
 int main (){
 	init();
 	printf("Init ok!\n");
+	
 	while(1){
 		aux_bot=0;
 		for (i=0;i<4;i++){
 			for (j=0;j<4;j++){
+				aux_bot++;
 				if (mat_bot[i][j]==true){
 					mat_led[i][j] = true;
-					aux_bot++;
 					push(aux_bot, &playlist[i]);
 				}
 			}
 		}
 		if (getchar()=='a')
 			break;
-		usleep(button_mdelay * 1000);
+		
 	}
 	desliga();
 	printf("Shutdown ok, smell you later!.\n");
@@ -124,7 +131,7 @@ void init(){
     	exit(-1);
     }
     snprintf(dir, sizeof(dir),"%s/audios/", cwd); 
-    printf( "Musics path: %s. create the folder audios if not created yet. (1.wav a 16.wav)\nPress a and enter to exit the program.\n", dir );
+    printf( "Musics path: %s. create the folder audios if not created yet. (1.mp3 a 16.mp3)\nPress a and enter to exit the program.\n", dir );
 
     
 	
@@ -209,6 +216,9 @@ void init(){
 		printf("Init. Failed! Cannot start thread coluna4\n");
 		exit(-1);
 	}
+	
+	while(!started || !started2 || !started3 || !started4 || !started5 || !started6){
+	}
 }
 
 void desliga(){
@@ -239,6 +249,7 @@ void desliga(){
 
 void * ler_bot(void * threadid)
 {
+	started = true;
 	while(!texit){
 		GPIOWrite(bot_lin1,HIGH);
 		GPIOWrite(bot_lin2,LOW);
@@ -282,12 +293,15 @@ void * ler_bot(void * threadid)
 		mat_bot[3][1] = GPIORead(bot_col2);
 		mat_bot[3][2] = GPIORead(bot_col3);
 		mat_bot[3][3] = GPIORead(bot_col4);
+		
+		usleep(button_mdelay * 1000);
 	}
 	 pthread_exit(threadid);
 }
 
 void * update_leds(void * threadid)
 {
+	started2 = true;
 	while(!texit){
 		GPIOWrite(led_lin1,HIGH);
 		GPIOWrite(led_lin2,LOW);
@@ -340,6 +354,7 @@ void * update_leds(void * threadid)
 }
 
 void * coluna1(void * threadid){
+	started3 = true;
 	int * fila;
 	unsigned int qtde;
 	char path[1225];
@@ -349,7 +364,7 @@ void * coluna1(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[0])){
 			fila = listar(playlist[0],&qtde);
-			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
@@ -380,6 +395,7 @@ void * coluna1(void * threadid){
 
 
 void * coluna2(void * threadid){
+	started4 = true;
 	int * fila;
 	unsigned int qtde;
 	char path[1225];
@@ -389,7 +405,7 @@ void * coluna2(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[1])){
 			fila = listar(playlist[1],&qtde);
-			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
@@ -419,6 +435,7 @@ void * coluna2(void * threadid){
 }
 
 void * coluna3(void * threadid){
+	started5 = true;
 	int * fila;
 	unsigned int qtde;
 	char path[1225];
@@ -428,7 +445,7 @@ void * coluna3(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[2])){
 			fila = listar(playlist[2],&qtde);
-			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
@@ -458,6 +475,7 @@ void * coluna3(void * threadid){
 }
 
 void * coluna4(void * threadid){
+	started6 = true;
 	int * fila;
 	unsigned int qtde;
 	char path[1225];
@@ -467,7 +485,7 @@ void * coluna4(void * threadid){
 	while (!texit){
 		if (!vazia(playlist[3])){
 			fila = listar(playlist[3],&qtde);
-			snprintf(path, sizeof(path),"%s%d.wav", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
