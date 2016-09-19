@@ -109,8 +109,7 @@ int main (){
 				}
 			}
 		}
-		if (getchar()=='a')
-			break;
+		
 		
 	}
 	desliga();
@@ -389,6 +388,7 @@ void * coluna1(void * threadid){
 			}
 			free(fila);
 		}
+		mat_bot[lin][col] = false;
 	}
 	pthread_exit(threadid);
 }
@@ -430,6 +430,7 @@ void * coluna2(void * threadid){
 			}
 			free(fila);
 		}
+		mat_bot[lin][col] = false;
 	}
 	pthread_exit(threadid);
 }
@@ -470,6 +471,7 @@ void * coluna3(void * threadid){
 			}
 			free(fila);
 		}
+		mat_bot[lin][col] = false;
 	}
 	pthread_exit(threadid);
 }
@@ -510,6 +512,7 @@ void * coluna4(void * threadid){
 			}
 			free(fila);
 		}
+		mat_bot[lin][col] = false;
 	}
 	pthread_exit(threadid);
 }
