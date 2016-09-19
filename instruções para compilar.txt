@@ -3,3 +3,9 @@ Para compilar no linux use o seguinte comando:
 gcc -Wall main.c lp.c fila.c -o launchpad -pthread
 
 Isso vai linkar os 2 arquivos .c e isso permite uma organização maior.
+
+
+Para ligar o audio da rasp use:
+
+sudo modprobe snd_bcm2835
+

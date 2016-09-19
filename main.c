@@ -97,7 +97,7 @@ bool texit = false;
 int main (){
 	init();
 	printf("Init ok!\n");
-	
+	mat_bot[0][0] = true;
 	while(1){
 		aux_bot=0;
 		for (i=0;i<4;i++){
@@ -387,8 +387,8 @@ void * coluna1(void * threadid){
     			pop(&playlist[0]);
 			}
 			free(fila);
+			mat_bot[lin][col] = false;
 		}
-		mat_bot[lin][col] = false;
 	}
 	pthread_exit(threadid);
 }
@@ -429,8 +429,8 @@ void * coluna2(void * threadid){
     			pop(&playlist[1]);
 			}
 			free(fila);
+			mat_bot[lin][col] = false;
 		}
-		mat_bot[lin][col] = false;
 	}
 	pthread_exit(threadid);
 }
@@ -470,8 +470,9 @@ void * coluna3(void * threadid){
     			pop(&playlist[2]);
 			}
 			free(fila);
+			mat_bot[lin][col] = false;
 		}
-		mat_bot[lin][col] = false;
+		
 	}
 	pthread_exit(threadid);
 }
@@ -511,8 +512,8 @@ void * coluna4(void * threadid){
     			pop(&playlist[3]);
 			}
 			free(fila);
+			mat_bot[lin][col] = false;
 		}
-		mat_bot[lin][col] = false;
 	}
 	pthread_exit(threadid);
 }
