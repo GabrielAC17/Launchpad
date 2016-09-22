@@ -97,7 +97,6 @@ bool texit = false;
 int main (){
 	init();
 	printf("Init ok!\n");
-	mat_bot[0][0] = true;
 	while(1){
 		aux_bot=0;
 		for (i=0;i<4;i++){
@@ -131,7 +130,7 @@ void init(){
     	exit(-1);
     }
     snprintf(dir, sizeof(dir),"%s/audios/", cwd); 
-    printf( "Musics path: %s. create the folder audios if not created yet. (1.mp3 a 16.mp3)\nPress a and enter to exit the program.\n", dir );
+    printf( "Musics path: %s. create the folder audios if not created yet. (1.mp3 a 16.mp3)\n", dir );
 
     
 	
@@ -470,7 +469,6 @@ void * update_leds(void * threadid)
 
 void * coluna1(void * threadid){
 	started3 = true;
-	unsigned int qtde;
 	char path[1225];
 	char command[1250];
 	int lin, col;
@@ -508,7 +506,6 @@ void * coluna1(void * threadid){
 
 void * coluna2(void * threadid){
 	started4 = true;
-	unsigned int qtde;
 	char path[1225];
 	char command[1250];
 	int lin, col;
@@ -545,7 +542,6 @@ void * coluna2(void * threadid){
 
 void * coluna3(void * threadid){
 	started5 = true;
-	unsigned int qtde;
 	char path[1225];
 	char command[1250];
 	int lin, col;
@@ -582,7 +578,6 @@ void * coluna3(void * threadid){
 
 void * coluna4(void * threadid){
 	started6 = true;
-	unsigned int qtde;
 	char path[1225];
 	char command[1250];
 	int lin, col;
