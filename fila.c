@@ -52,11 +52,11 @@ bool iniciar(unsigned int tamanho, Fila * qual)
 
 bool push(int info, Fila * qual)
 {
-	if (cheia(*qual))
-		return false;
-
 	if (qual->fim == qual->tamanho)
 		qual->fim = 0;
+
+	if (cheia(*qual))
+		return false;
 
 	qual->elementos[qual->fim] = info;
 	qual->fim++;
@@ -87,7 +87,7 @@ int * listar(Fila qual, unsigned int * qtde)
 }
 
 bool cheia(Fila qual) {
-	if ((qual.fim == qual.tamanho && qual.inicio < 2) || qual.fim == qual.inicio - 1)
+	if ((qual.fim == qual.tamanho && qual.inicio < 2) || (qual.fim == qual.inicio - 1))
 		return true;
 	return false;
 }

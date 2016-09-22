@@ -254,7 +254,7 @@ void * ler_bot(void * threadid)
 		GPIOWrite(bot_lin2,LOW);
 		GPIOWrite(bot_lin3,LOW);
 		GPIOWrite(bot_lin4,LOW);
-
+		
 		mat_bot[0][0] = GPIORead(bot_col1);
 		mat_bot[0][1] = GPIORead(bot_col2);
 		mat_bot[0][2] = GPIORead(bot_col3);
