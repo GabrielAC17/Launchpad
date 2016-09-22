@@ -106,6 +106,7 @@ int main (){
 				if (mat_bot[i][j]==true){
 					mat_led[i][j] = true;
 					push(aux_bot, &playlist[i]);
+					mat_bot[i][j] = false;
 				}
 			}
 		}
@@ -255,47 +256,162 @@ void * ler_bot(void * threadid)
 		GPIOWrite(bot_lin3,LOW);
 		GPIOWrite(bot_lin4,LOW);
 		
+		/*
 		mat_bot[0][0] = GPIORead(bot_col1);
 		mat_bot[0][1] = GPIORead(bot_col2);
 		mat_bot[0][2] = GPIORead(bot_col3);
 		mat_bot[0][3] = GPIORead(bot_col4);
+		*/
 		
+		if (GPIORead(bot_col1)){
+			while (GPIORead(bot_col1)){
+			
+			}
+			mat_bot[0][0] = true;
+		}
+		
+		if (GPIORead(bot_col2)){
+			while (GPIORead(bot_col2)){
+			
+			}
+			mat_bot[0][1] = true;
+		}
+		
+		if (GPIORead(bot_col3)){
+			while (GPIORead(bot_col3)){
+			
+			}
+			mat_bot[0][2] = true;
+		}
+		
+		if (GPIORead(bot_col4)){
+			while (GPIORead(bot_col4)){
+			
+			}
+			mat_bot[0][3] = true;
+		}
 		
 		GPIOWrite(bot_lin1,LOW);
 		GPIOWrite(bot_lin2,HIGH);
 		GPIOWrite(bot_lin3,LOW);
 		GPIOWrite(bot_lin4,LOW);
 		
+		/*
 		mat_bot[1][0] = GPIORead(bot_col1);
 		mat_bot[1][1] = GPIORead(bot_col2);
 		mat_bot[1][2] = GPIORead(bot_col3);
 		mat_bot[1][3] = GPIORead(bot_col4);
+		*/
 		
+		if (GPIORead(bot_col1)){
+			while (GPIORead(bot_col1)){
+			
+			}
+			mat_bot[1][0] = true;
+		}
+		
+		if (GPIORead(bot_col2)){
+			while (GPIORead(bot_col2)){
+			
+			}
+			mat_bot[1][1] = true;
+		}
+		
+		if (GPIORead(bot_col3)){
+			while (GPIORead(bot_col3)){
+			
+			}
+			mat_bot[1][2] = true;
+		}
+		
+		if (GPIORead(bot_col4)){
+			while (GPIORead(bot_col4)){
+			
+			}
+			mat_bot[1][3] = true;
+		}
 		
 		GPIOWrite(bot_lin1,LOW);
 		GPIOWrite(bot_lin2,LOW);
 		GPIOWrite(bot_lin3,HIGH);
 		GPIOWrite(bot_lin4,LOW);
 		
+		/*
 		mat_bot[2][0] = GPIORead(bot_col1);
 		mat_bot[2][1] = GPIORead(bot_col2);
 		mat_bot[2][2] = GPIORead(bot_col3);
 		mat_bot[2][3] = GPIORead(bot_col4);
+		*/
 		
+		if (GPIORead(bot_col1)){
+			while (GPIORead(bot_col1)){
+			
+			}
+			mat_bot[2][0] = true;
+		}
+		
+		if (GPIORead(bot_col2)){
+			while (GPIORead(bot_col2)){
+			
+			}
+			mat_bot[2][1] = true;
+		}
+		
+		if (GPIORead(bot_col3)){
+			while (GPIORead(bot_col3)){
+			
+			}
+			mat_bot[2][2] = true;
+		}
+		
+		if (GPIORead(bot_col4)){
+			while (GPIORead(bot_col4)){
+			
+			}
+			mat_bot[2][3] = true;
+		}
 		
 		GPIOWrite(bot_lin1,LOW);
 		GPIOWrite(bot_lin2,LOW);
 		GPIOWrite(bot_lin3,LOW);
 		GPIOWrite(bot_lin4,HIGH);
 		
+		/*
 		mat_bot[3][0] = GPIORead(bot_col1);
 		mat_bot[3][1] = GPIORead(bot_col2);
 		mat_bot[3][2] = GPIORead(bot_col3);
 		mat_bot[3][3] = GPIORead(bot_col4);
+		*/
 		
-		usleep(button_mdelay * 1000);
+		if (GPIORead(bot_col1)){
+			while (GPIORead(bot_col1)){
+			
+			}
+			mat_bot[3][0] = true;
+		}
+		
+		if (GPIORead(bot_col2)){
+			while (GPIORead(bot_col2)){
+			
+			}
+			mat_bot[3][1] = true;
+		}
+		
+		if (GPIORead(bot_col3)){
+			while (GPIORead(bot_col3)){
+			
+			}
+			mat_bot[3][2] = true;
+		}
+		
+		if (GPIORead(bot_col4)){
+			while (GPIORead(bot_col4)){
+			
+			}
+			mat_bot[3][3] = true;
+		}
 	}
-	 pthread_exit(threadid);
+	pthread_exit(threadid);
 }
 
 void * update_leds(void * threadid)
@@ -354,7 +470,6 @@ void * update_leds(void * threadid)
 
 void * coluna1(void * threadid){
 	started3 = true;
-	int * fila;
 	unsigned int qtde;
 	char path[1225];
 	char command[1250];
@@ -362,18 +477,17 @@ void * coluna1(void * threadid){
 	
 	while (!texit){
 		if (!vazia(playlist[0])){
-			fila = listar(playlist[0],&qtde);
-			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,playlist[0].elementos[playlist[0].inicio]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
 				system(command);
-				check_LED(fila[0],&lin,&col);
+				check_LED(playlist[0].elementos[playlist[0].inicio],&lin,&col);
 				mat_led[lin][col] = false;
 				pop(&playlist[0]);
 			} 
 			else {
-    			check_LED(fila[0],&lin,&col);
+    			check_LED(playlist[0].elementos[playlist[0].inicio],&lin,&col);
     			usleep(100*1000);
     			mat_led[lin][col] = false;
     			usleep(100*1000);
@@ -386,8 +500,6 @@ void * coluna1(void * threadid){
     			mat_led[lin][col] = false;
     			pop(&playlist[0]);
 			}
-			free(fila);
-			mat_bot[lin][col] = false;
 		}
 	}
 	pthread_exit(threadid);
@@ -396,7 +508,6 @@ void * coluna1(void * threadid){
 
 void * coluna2(void * threadid){
 	started4 = true;
-	int * fila;
 	unsigned int qtde;
 	char path[1225];
 	char command[1250];
@@ -404,18 +515,17 @@ void * coluna2(void * threadid){
 	
 	while (!texit){
 		if (!vazia(playlist[1])){
-			fila = listar(playlist[1],&qtde);
-			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,playlist[1].elementos[playlist[1].inicio]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
 				system(command);
-				check_LED(fila[0],&lin,&col);
+				check_LED(playlist[1].elementos[playlist[1].inicio],&lin,&col);
 				mat_led[lin][col] = false;
 				pop(&playlist[1]);
 			} 
 			else {
-    			check_LED(fila[0],&lin,&col);
+    			check_LED(playlist[1].elementos[playlist[1].inicio],&lin,&col);
     			usleep(100*1000);
     			mat_led[lin][col] = false;
     			usleep(100*1000);
@@ -428,8 +538,6 @@ void * coluna2(void * threadid){
     			mat_led[lin][col] = false;
     			pop(&playlist[1]);
 			}
-			free(fila);
-			mat_bot[lin][col] = false;
 		}
 	}
 	pthread_exit(threadid);
@@ -437,7 +545,6 @@ void * coluna2(void * threadid){
 
 void * coluna3(void * threadid){
 	started5 = true;
-	int * fila;
 	unsigned int qtde;
 	char path[1225];
 	char command[1250];
@@ -445,18 +552,17 @@ void * coluna3(void * threadid){
 	
 	while (!texit){
 		if (!vazia(playlist[2])){
-			fila = listar(playlist[2],&qtde);
-			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,playlist[2].elementos[playlist[2].inicio]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
 				system(command);
-				check_LED(fila[0],&lin,&col);
+				check_LED(playlist[2].elementos[playlist[2].inicio],&lin,&col);
 				mat_led[lin][col] = false;
 				pop(&playlist[2]);
 			} 
 			else {
-    			check_LED(fila[0],&lin,&col);
+    			check_LED(playlist[2].elementos[playlist[2].inicio],&lin,&col);
     			usleep(100*1000);
     			mat_led[lin][col] = false;
     			usleep(100*1000);
@@ -469,17 +575,13 @@ void * coluna3(void * threadid){
     			mat_led[lin][col] = false;
     			pop(&playlist[2]);
 			}
-			free(fila);
-			mat_bot[lin][col] = false;
 		}
-		
 	}
 	pthread_exit(threadid);
 }
 
 void * coluna4(void * threadid){
 	started6 = true;
-	int * fila;
 	unsigned int qtde;
 	char path[1225];
 	char command[1250];
@@ -487,18 +589,17 @@ void * coluna4(void * threadid){
 	
 	while (!texit){
 		if (!vazia(playlist[3])){
-			fila = listar(playlist[3],&qtde);
-			snprintf(path, sizeof(path),"%s%d.mp3", dir,fila[0]);
+			snprintf(path, sizeof(path),"%s%d.mp3", dir,playlist[3].elementos[playlist[3].inicio]);
 		
 			if( access( path, F_OK ) != -1 ) {
 				snprintf(command, sizeof(command),"mpg123 %s", path);
 				system(command);
-				check_LED(fila[0],&lin,&col);
+				check_LED(playlist[3].elementos[playlist[3].inicio],&lin,&col);
 				mat_led[lin][col] = false;
 				pop(&playlist[3]);
 			} 
 			else {
-    			check_LED(fila[0],&lin,&col);
+    			check_LED(playlist[3].elementos[playlist[3].inicio],&lin,&col);
     			usleep(100*1000);
     			mat_led[lin][col] = false;
     			usleep(100*1000);
@@ -511,8 +612,6 @@ void * coluna4(void * threadid){
     			mat_led[lin][col] = false;
     			pop(&playlist[3]);
 			}
-			free(fila);
-			mat_bot[lin][col] = false;
 		}
 	}
 	pthread_exit(threadid);

@@ -6,41 +6,6 @@
 
 #include "fila.h"
 
-Fila hue;
-
-/*
-//Exemplo de uso de Fila circular:
-int main() {
-
-	unsigned int x;
-	int *valores;
-	srand(time(0));
-	iniciar(8, &hue);
-	for (int i = 0; i < 8; i++) {
-		push(rand(), &hue);
-	}
-
-	valores = listar(hue,&x);
-
-	for (unsigned int i = 0; i < x;i++) {
-		printf("%d\n",valores[i]);
-	}
-
-	pop(&hue);
-	pop(&hue);
-
-	push(rand(), &hue);
-
-	valores = listar(hue, &x);
-	
-	for (unsigned int i = 0; i < x; i++) {
-		printf("%d\n", valores[i]);
-	}
-
-	return 0;
-}
-*/
-
 bool iniciar(unsigned int tamanho, Fila * qual)
 {
 	qual->tamanho = tamanho;
